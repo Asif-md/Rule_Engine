@@ -15,11 +15,9 @@ def rules_list(request):
     # GET list of rules, POST a new rule, DELETE all rules
     if request.method == 'GET':
         rules = RuleEngine.objects.all()
-
         fullName = request.GET.get('fullName', None)
         if fullName is not None:
             rules = rules.filter(fullName__icontains=fullName)
-
         rules_serializer = RuleEngineSerializer(rules, many=True)
         return JsonResponse(rules_serializer.data, safe=False)
 
@@ -30,6 +28,10 @@ def rules_list(request):
             rule_serializer.save()
             return JsonResponse(rule_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(rule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        count = RuleEngine.objects.all().delete()
+        return JsonResponse({'message': '{} Rules were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -54,6 +56,3 @@ def rule_detail(request, pk):
     elif request.method == 'DELETE':
         rule.delete()
         return JsonResponse({'message': 'Rule was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
-    elif request.method == 'DELETE':
-        count = RuleEngine.objects.all().delete()
-        return JsonResponse({'message': '{} Rules were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)

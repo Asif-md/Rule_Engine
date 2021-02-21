@@ -35,6 +35,7 @@ class CreateRule extends Component {
   };
   render() {
     const { fullName, address, DOB } = this.state;
+    const enabled = fullName.length > 0 && address.length > 0 && DOB.length > 0;
     return (
       <div style={{ width: "400px", margin: "0 auto", marginTop: "10%" }}>
         <form onSubmit={this.onSubmit}>
@@ -80,6 +81,7 @@ class CreateRule extends Component {
             onClick={this.onSubmit}
             type="submit"
             className="btn btn-primary"
+            disabled={!enabled}
           >
             Submit
           </button>

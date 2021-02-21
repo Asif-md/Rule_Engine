@@ -39,6 +39,7 @@ def rule_detail(request, pk):
     # find rule by pk (id)
     try:
         rule = RuleEngine.objects.get(pk=pk)
+        print(rule)
     except RuleEngine.DoesNotExist:
         return JsonResponse({'message': 'The rule does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -48,6 +49,12 @@ def rule_detail(request, pk):
         return JsonResponse(rule_serializer.data)
     elif request.method == 'PUT':
         rule_data = JSONParser().parse(request)
+        print(rule_data["base_price"])
+        rule_serializer = RuleEngineSerializer(rule)
+        old_balance = rule_serializer.data["base_price"]
+        amount_covered = old_balance + rule_data["base_price"]
+
+        rule_data["base_price"] = amount_covered
         rule_serializer = RuleEngineSerializer(rule, data=rule_data)
         if rule_serializer.is_valid():
             rule_serializer.save()

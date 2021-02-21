@@ -9,4 +9,5 @@ class RuleEngineSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'fullName',
                   'address',
-                  'DOB')
+                  'DOB',
+                  'base_price')
